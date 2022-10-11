@@ -24,9 +24,14 @@ public class User {
     )
     private String externalID;
 
+    @Column(name = "enabled")
+    private boolean enabled;
+
     protected User() {}
 
     public User(String externalID) {
+        super();
+        this.enabled=false;
         this.externalID = externalID;
     }
 
