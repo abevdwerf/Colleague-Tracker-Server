@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ErrorResponse {
+public class StatusResponse {
 
     private int statusCode;
     private String message;
 
-    public ErrorResponse(String message){
+    public StatusResponse(String message){
         this.message = message;
     }
 }

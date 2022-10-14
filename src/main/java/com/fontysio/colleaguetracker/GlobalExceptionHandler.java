@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
     @ExceptionHandler(value = UserNotRegisteredException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public @ResponseBody ErrorResponse handleUserNotRegisteredException() {
-        return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "User has not been registered yet! Please first register user with a valid GoogleIDToken");
+    public @ResponseBody StatusResponse handleUserNotRegisteredException() {
+        return new StatusResponse(HttpStatus.BAD_REQUEST.value(), "User has not been registered yet! Please first register user with a valid GoogleIDToken");
     }
 
     @ExceptionHandler(value = GoogleIDTokenInvalidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public @ResponseBody ErrorResponse handleGoogleIdTokenInvalidException() {
-        return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "User has not been registered yet! Please first register user with a valid GoogleIDToken");
+    public @ResponseBody StatusResponse handleGoogleIdTokenInvalidException() {
+        return new StatusResponse(HttpStatus.BAD_REQUEST.value(), "The given Google ID token was invalid");
     }
 }

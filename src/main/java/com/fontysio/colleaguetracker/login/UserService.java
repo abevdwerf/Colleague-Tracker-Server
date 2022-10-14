@@ -34,7 +34,7 @@ public class UserService {
         GoogleIdToken idToken;
         try {
             idToken = verifier.verify(idTokenString);
-        } catch (GeneralSecurityException | IOException e) {
+        } catch (Exception e) {
             throw new GoogleIDTokenInvalidException();
         }
 
@@ -46,17 +46,17 @@ public class UserService {
         return payload;
     }
 
-    public Long registerNewUser(Payload payload) {
+    public boolean registerNewUser(Payload payload) {
         try {
             Long userID = getUserID(payload.getSubject());
-            return userID;
+            return false;
         } catch (UserNotRegisteredException e) {}
 
         userRepository.save(new User(payload.getSubject(), (String) payload.get("given_name"), (String) payload.get("family_name")));
 
         try {
             Long userID = getUserID(payload.getSubject());
-            return userID;
+            return true;
         } catch (UserNotRegisteredException e) {
             String error = "User ID with external ID: " + payload.getSubject() + "was empty after creating new user that externalID";
             throw new RuntimeException(error);
