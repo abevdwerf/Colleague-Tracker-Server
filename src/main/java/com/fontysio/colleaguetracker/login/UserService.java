@@ -26,48 +26,56 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    //Should return internal externalUserID, or null if:
-    // - user does not exist or
-    // - jwt token is not valid
-    public Optional<String> getExternalID(String idTokenString) {
+    public String getExternalID (String idTokenString) throws GoogleIDTokenInvalidException {
+        return getGooglePayload(idTokenString).getSubject();
+    }
+    public Payload getGooglePayload(String idTokenString) throws GoogleIDTokenInvalidException {
 
         GoogleIdToken idToken;
         try {
             idToken = verifier.verify(idTokenString);
         } catch (GeneralSecurityException | IOException e) {
-            System.out.println("An exception was thrown!!");
-            return Optional.empty();
+            throw new GoogleIDTokenInvalidException();
         }
 
         if (idToken == null) {
-            System.out.println("Invalid ID token");
-            return Optional.empty();
+            throw new GoogleIDTokenInvalidException();
         }
 
         Payload payload = idToken.getPayload();
-        String externalUserID = payload.getSubject();
-        return Optional.of(externalUserID);
+        return payload;
     }
 
-    public Optional<Long> registerNewUser(String externalID) {
-        Optional<Long> userID = getUserID(externalID);
-        if (userID.isPresent()) {
+    public Long registerNewUser(Payload payload) {
+        try {
+            Long userID = getUserID(payload.getSubject());
             return userID;
-        }
-        userRepository.save(new User(externalID));
-        Optional<Long> newUserID = getUserID(externalID);
-        if (newUserID.isEmpty()){
-            String error = "User ID with external ID: " + externalID + "was empty after creating new user that externalID";
+        } catch (UserNotRegisteredException e) {}
+
+        userRepository.save(new User(payload.getSubject(), (String) payload.get("given_name"), (String) payload.get("family_name")));
+
+        try {
+            Long userID = getUserID(payload.getSubject());
+            return userID;
+        } catch (UserNotRegisteredException e) {
+            String error = "User ID with external ID: " + payload.getSubject() + "was empty after creating new user that externalID";
             throw new RuntimeException(error);
         }
-        return newUserID;
     }
 
-    public Optional<Long> getUserID(String externalID) {
+    public Long getUserID(String externalID) throws UserNotRegisteredException {
         User user = userRepository.getUserByExternalID(externalID);
         if (user != null) {
-            return Optional.of(user.getId());
+            return user.getId();
         }
-        return Optional.empty();
+        throw new UserNotRegisteredException();
+    }
+
+    public User getUser(String externalID) throws UserNotRegisteredException {
+        User user = userRepository.getUserByExternalID(externalID);
+        if (user != null) {
+            return user;
+        }
+        throw new UserNotRegisteredException();
     }
 }

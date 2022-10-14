@@ -24,10 +24,30 @@ public class User {
     )
     private String externalID;
 
+    @Column(
+            name="is_verified_as_io_employee",
+            nullable = false
+    )
+    private boolean isVerifiedAsIOEmployee = false;
+
+    @Column(
+            name="first_name",
+            nullable = false
+    )
+    private String firstName;
+
+    @Column(
+            name="last_name",
+            nullable = false
+    )
+    private String lastName;
+
     protected User() {}
 
-    public User(String externalID) {
+    public User(String externalID, String firstName, String lastName) {
         this.externalID = externalID;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public Long getId() {
@@ -36,5 +56,17 @@ public class User {
 
     public String getExternalID() {
         return externalID;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public boolean isVerifiedAsIOEmployee() {
+        return isVerifiedAsIOEmployee;
     }
 }

@@ -1,11 +1,12 @@
 package com.fontysio.colleaguetracker.login;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
 
 @RestController
 public class UserController {
@@ -16,21 +17,18 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping( "/login")
-    public String getSomeData(@RequestHeader String IdToken){
-        Optional<String> optExternalID = userService.getExternalID(IdToken);
-        if (optExternalID.isEmpty()) {
-            return "JWT token not valid";
-        }
-        String externalID = optExternalID.get();
-        Optional<Long> userID = userService.getUserID(externalID);
-        if (userID.isEmpty()) {
-            userID = userService.registerNewUser(externalID);
-        }
-        if (!userID.isPresent()) {
-            return "something went wrong";
-        }
-        return "your user ID is: " + userID.get();
+    @GetMapping( "/get-full-name")
+    public String getFullName (@RequestHeader String idToken) throws UserNotRegisteredException, GoogleIDTokenInvalidException {
+        String externalID = userService.getExternalID(idToken);
+        User user = userService.getUser(externalID);
+        return user.getFirstName() + " " + user.getLastName();
+    }
+
+    @GetMapping("/register")
+    public HttpStatus register (@RequestHeader String idToken) throws GoogleIDTokenInvalidException {
+        Payload googlePayload  = userService.getGooglePayload(idToken);
+        userService.registerNewUser(googlePayload);
+        return HttpStatus.OK;
     }
 
     @GetMapping( "/hello")
