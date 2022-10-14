@@ -9,14 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Calendar;
-import java.util.Locale;
-import java.util.Optional;
 
 @RestController
 //@RequestMapping(path = "api/user")
@@ -48,12 +44,8 @@ public class UserController {
     }
 
     @PostMapping( "/verificate")
-    public String verificate(@RequestHeader String IdToken, @RequestBody String emailAddress, HttpServletRequest request){
-        Optional<String> optExternalID = userService.getExternalID(IdToken);
-        if (optExternalID.isEmpty()) {
-            return "JWT token not valid";
-        }
-        String externalID = optExternalID.get();
+    public String verificate(@RequestHeader String IdToken, @RequestBody String emailAddress, HttpServletRequest request) throws GoogleIDTokenInvalidException{
+        String externalID = userService.getExternalID(IdToken);
 
         EmailValidator validator = new EmailValidator();
         if (!validator.isValid(emailAddress)) {
@@ -61,7 +53,7 @@ public class UserController {
         }
 
         if(userService.emailExists(emailAddress)) {
-            return "There is an account with that email address: " + emailAddress;
+            return "There is already an account with that email address: " + emailAddress;
         }
 
         try {
