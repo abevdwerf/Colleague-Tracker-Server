@@ -17,8 +17,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = GoogleIDTokenInvalidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public @ResponseBody StatusResponse handleGoogleIdTokenInvalidException() {
-        return new StatusResponse(HttpStatus.BAD_REQUEST.value(), "The given Google ID token was invalid");
+        return new StatusResponse(HttpStatus.UNAUTHORIZED.value(), "The given Google ID token was invalid");
     }
 }
