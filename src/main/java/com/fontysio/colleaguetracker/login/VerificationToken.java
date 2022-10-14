@@ -20,7 +20,16 @@ public class VerificationToken {
     private User user;
 
     private Date expiryDate;
+    public VerificationToken() {
+        super();
+    }
+    public VerificationToken(final String token, final User user) {
+        super();
 
+        this.token = token;
+        this.user = user;
+        this.expiryDate = calculateExpiryDate(EXPIRATION);
+    }
     private Date calculateExpiryDate(int expiryTimeInMinutes) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Timestamp(cal.getTime().getTime()));
@@ -28,5 +37,10 @@ public class VerificationToken {
         return new Date(cal.getTime().getTime());
     }
 
-    // standard constructors, getters and setters
+    public Date getExpiryDate() {
+        return expiryDate;
+    }
+    public User getUser() {
+        return user;
+    }
 }
