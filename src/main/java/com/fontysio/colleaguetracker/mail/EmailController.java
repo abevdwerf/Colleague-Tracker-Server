@@ -9,7 +9,7 @@ import java.util.Calendar;
 
 @RestController
 @CrossOrigin
-@RequestMapping(path = "api/email")
+@RequestMapping(path = "email")
 public class EmailController {
 
     private final EmailService emailService;

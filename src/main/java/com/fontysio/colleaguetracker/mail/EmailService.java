@@ -39,7 +39,7 @@ public class EmailService {
         String recipientAddress = user.getEmail();
         String subject = "IO Employee Registration Confirmation";
         String confirmationUrl
-                = appUrl + "/api/email/confirm?token=" + token;
+                = appUrl + "/email/confirm?token=" + token;
         String message = messages.getMessage("message.regSuccLink", null, "You registered successfully. To confirm your registration, please click on the below link.", locale);
 
         SimpleMailMessage email = new SimpleMailMessage();

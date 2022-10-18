@@ -16,7 +16,7 @@ import java.util.Calendar;
 
 @RestController
 @CrossOrigin
-@RequestMapping(path = "api/user")
+@RequestMapping(path = "user")
 public class UserController {
     private final UserService userService;
 
