@@ -28,11 +28,6 @@ public class User {
     @Column(name = "enabled")
     private boolean enabled;
 
-    @Column(
-            name="is_verified_as_io_employee",
-            nullable = false
-    )
-    private boolean isVerifiedAsIOEmployee = false;
 
     @Column(
             name="first_name",
@@ -81,7 +76,4 @@ public class User {
         return lastName;
     }
 
-    public boolean isVerifiedAsIOEmployee() {
-        return isVerifiedAsIOEmployee;
-    }
 }

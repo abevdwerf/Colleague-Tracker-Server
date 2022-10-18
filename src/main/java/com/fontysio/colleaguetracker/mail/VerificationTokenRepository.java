@@ -1,5 +1,6 @@
-package com.fontysio.colleaguetracker.login;
+package com.fontysio.colleaguetracker.mail;
 
+import com.fontysio.colleaguetracker.login.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

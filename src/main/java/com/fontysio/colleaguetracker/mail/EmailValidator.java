@@ -1,4 +1,4 @@
-package com.fontysio.colleaguetracker.login;
+package com.fontysio.colleaguetracker.mail;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

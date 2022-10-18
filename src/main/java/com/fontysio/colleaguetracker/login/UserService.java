@@ -1,5 +1,6 @@
 package com.fontysio.colleaguetracker.login;
 
+import com.fontysio.colleaguetracker.mail.VerificationTokenRepository;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
@@ -9,23 +10,19 @@ import com.google.api.client.json.gson.GsonFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.Collections;
-import java.util.Optional;
 
 @Service
-public class UserService implements IUserService{
+public class UserService implements IUserService_Email {
 
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private VerificationTokenRepository tokenRepository;
+    private final UserRepository userRepository;
+
     private final GooglePublicKeysManager publicKeysManager = new GooglePublicKeysManager(new NetHttpTransport(), new GsonFactory());
     private final GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(publicKeysManager)
             .setAudience(Collections.singletonList("733509514183-sa302u6f1fhqc7a93j789daqmgr63ckv.apps.googleusercontent.com"))
             .build();
 
+    @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -83,27 +80,11 @@ public class UserService implements IUserService{
         throw new UserNotRegisteredException();
     }
 
-    public User getUserByExternalID(String externalID) {
-        User user = userRepository.getUserByExternalID(externalID);
-        if (user != null) {
-            return user;
-        }
-        return null;
-    }
-    @Override
-    public void createVerificationToken(User user, String token) {
-        final VerificationToken myToken = new VerificationToken(token, user);
-        tokenRepository.save(myToken);
-    }
-    @Override
-    public VerificationToken getVerificationToken(final String VerificationToken) {
-        return tokenRepository.findByToken(VerificationToken);
-    }
+    public void updateUser(final User user) {
+        userRepository.save(user);
+   }
+
     public boolean emailExists(final String email) {
         return userRepository.findByEmail(email) != null;
-    }
-
-    public void saveRegisteredUser(final User user) {
-        userRepository.save(user);
     }
 }

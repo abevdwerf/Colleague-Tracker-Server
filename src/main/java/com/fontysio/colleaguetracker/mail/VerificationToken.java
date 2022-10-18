@@ -1,4 +1,6 @@
-package com.fontysio.colleaguetracker.login;
+package com.fontysio.colleaguetracker.mail;
+
+import com.fontysio.colleaguetracker.login.User;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
