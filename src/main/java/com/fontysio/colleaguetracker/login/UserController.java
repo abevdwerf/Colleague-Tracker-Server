@@ -1,8 +1,8 @@
 package com.fontysio.colleaguetracker.login;
 
 import com.fontysio.colleaguetracker.StatusResponse;
+import com.fontysio.colleaguetracker.mail.EmailValidator;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
-import jdk.jshell.Snippet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
+@CrossOrigin
+@RequestMapping(path = "user")
+
 public class UserController {
     private final UserService userService;
 
@@ -35,9 +38,4 @@ public class UserController {
         return new StatusResponse(HttpStatus.OK.value(), "User registered successfully");
     }
 
-    @GetMapping( "/hello")
-    public String sayHello(){
-        System.out.println("hello");
-        return "hello";
-    }
 }

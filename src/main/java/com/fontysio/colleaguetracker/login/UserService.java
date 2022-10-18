@@ -1,5 +1,6 @@
 package com.fontysio.colleaguetracker.login;
 
+import com.fontysio.colleaguetracker.mail.VerificationTokenRepository;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
@@ -8,20 +9,19 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.Collections;
-import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements IUserService_Email {
 
-    UserRepository userRepository;
+    private final UserRepository userRepository;
+
     private final GooglePublicKeysManager publicKeysManager = new GooglePublicKeysManager(new NetHttpTransport(), new GsonFactory());
     private final GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(publicKeysManager)
             .setAudience(Collections.singletonList("733509514183-sa302u6f1fhqc7a93j789daqmgr63ckv.apps.googleusercontent.com"))
             .build();
 
+    @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -78,4 +78,13 @@ public class UserService {
         }
         throw new UserNotRegisteredException();
     }
+
+    public void updateUser(final User user) {
+        userRepository.save(user);
+   }
+
+    public boolean emailExists(final String email) {
+        return userRepository.findByEmail(email) != null;
+    }
+
 }
