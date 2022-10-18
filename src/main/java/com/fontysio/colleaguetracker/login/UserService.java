@@ -7,7 +7,6 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.googleapis.auth.oauth2.GooglePublicKeysManager;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -87,4 +86,5 @@ public class UserService implements IUserService_Email {
     public boolean emailExists(final String email) {
         return userRepository.findByEmail(email) != null;
     }
+
 }

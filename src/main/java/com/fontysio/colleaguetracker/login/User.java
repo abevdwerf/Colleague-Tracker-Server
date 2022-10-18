@@ -16,7 +16,6 @@ public class User {
             updatable = false
     )
     private Long id;
-    private String email;
 
     @Column(
             name = "external_id",
@@ -27,6 +26,8 @@ public class User {
 
     @Column(name = "enabled")
     private boolean enabled;
+
+
 
 
     @Column(
@@ -44,8 +45,6 @@ public class User {
     protected User() {}
 
     public User(String externalID, String firstName, String lastName) {
-        super();
-        this.enabled=false;
         this.externalID = externalID;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -54,18 +53,9 @@ public class User {
     public Long getId() {
         return id;
     }
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(final String email) {
-        this.email = email;
-    }
 
     public String getExternalID() {
         return externalID;
-    }
-    public void setEnabled(final boolean enabled) {
-        this.enabled = enabled;
     }
 
     public String getFirstName() {
