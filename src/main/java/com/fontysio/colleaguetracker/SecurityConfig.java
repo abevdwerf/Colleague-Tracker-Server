@@ -16,7 +16,6 @@ public class SecurityConfig {
         http.authorizeHttpRequests((authorize) -> authorize
                 .anyRequest().permitAll())
                 .httpBasic(Customizer.withDefaults());
-        http.cors().and().csrf().disable();
         return http.build();
     }
 }
