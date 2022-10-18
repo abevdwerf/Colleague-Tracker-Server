@@ -6,6 +6,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.googleapis.auth.oauth2.GooglePublicKeysManager;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -14,9 +15,12 @@ import java.util.Collections;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements IUserService{
 
-    UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private VerificationTokenRepository tokenRepository;
     private final GooglePublicKeysManager publicKeysManager = new GooglePublicKeysManager(new NetHttpTransport(), new GsonFactory());
     private final GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(publicKeysManager)
             .setAudience(Collections.singletonList("733509514183-sa302u6f1fhqc7a93j789daqmgr63ckv.apps.googleusercontent.com"))
@@ -77,5 +81,29 @@ public class UserService {
             return user;
         }
         throw new UserNotRegisteredException();
+    }
+
+    public User getUserByExternalID(String externalID) {
+        User user = userRepository.getUserByExternalID(externalID);
+        if (user != null) {
+            return user;
+        }
+        return null;
+    }
+    @Override
+    public void createVerificationToken(User user, String token) {
+        final VerificationToken myToken = new VerificationToken(token, user);
+        tokenRepository.save(myToken);
+    }
+    @Override
+    public VerificationToken getVerificationToken(final String VerificationToken) {
+        return tokenRepository.findByToken(VerificationToken);
+    }
+    public boolean emailExists(final String email) {
+        return userRepository.findByEmail(email) != null;
+    }
+
+    public void saveRegisteredUser(final User user) {
+        userRepository.save(user);
     }
 }
