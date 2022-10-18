@@ -3,7 +3,6 @@ package com.fontysio.colleaguetracker.login;
 import com.fontysio.colleaguetracker.mail.VerificationToken;
 import org.springframework.stereotype.Component;
 
-@Component
 public interface IUserService_Email {
 
     String getExternalID(String idToken) throws GoogleIDTokenInvalidException;
