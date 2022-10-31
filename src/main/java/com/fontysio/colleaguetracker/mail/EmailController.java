@@ -1,6 +1,7 @@
 package com.fontysio.colleaguetracker.mail;
 
 import com.fontysio.colleaguetracker.login.*;
+import com.fontysio.colleaguetracker.login.services.IUserService_Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

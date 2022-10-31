@@ -1,6 +1,9 @@
-package com.fontysio.colleaguetracker.login;
+package com.fontysio.colleaguetracker.login.services;
 
-import com.fontysio.colleaguetracker.mail.VerificationTokenRepository;
+import com.fontysio.colleaguetracker.login.GoogleIDTokenInvalidException;
+import com.fontysio.colleaguetracker.login.User;
+import com.fontysio.colleaguetracker.login.UserNotRegisteredException;
+import com.fontysio.colleaguetracker.login.UserRepository;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
@@ -13,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 
 @Service
-public class UserService implements IUserService_Email {
+public class UserService implements IUserService_Email, IUserService_Status {
 
     private final UserRepository userRepository;
 
