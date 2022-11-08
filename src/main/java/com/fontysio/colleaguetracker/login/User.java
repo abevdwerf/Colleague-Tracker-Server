@@ -1,5 +1,7 @@
 package com.fontysio.colleaguetracker.login;
 
+import com.fontysio.colleaguetracker.status.StatusObject;
+
 import javax.persistence.*;
 
 @Entity(name = "user")
@@ -60,18 +62,18 @@ public class User {
     public void setEmail(final String email) {
         this.email = email;
     }
-
+    public boolean isEnabled() {
+        return enabled;
+    }
     public String getExternalID() {
         return externalID;
     }
     public void setEnabled(final boolean enabled) {
         this.enabled = enabled;
     }
-
     public String getFirstName() {
         return firstName;
     }
-
     public String getLastName() {
         return lastName;
     }

@@ -1,0 +1,41 @@
+version: '3.4'
+services:
+  io_ct_db_dev:
+    container_name: IO-CT-DB
+    image: mysql:5
+    environment:
+      MYSQL_DATABASE: 'io_ct_ddb'
+      MYSQL_ROOT_PASSWORD: 'root'
+      TZ: "Europe/Amsterdam"
+    ports:
+      - '25022:3306'
+    restart: always
+    expose:
+      - '25022'
+    volumes:
+      - io_ct_db_volume:/var/lib/mysql
+
+  io_ct_server:
+    container_name: IO-CT-Server
+    image: docker.josian.nl/io_ct_server:latest
+    environment:
+      SPRING_DATASOURCE_URL: 'jdbc:mysql://io_ct_db_dev:3306/io_ct_ddb'
+      SPRING_DATASOURCE_USERNAME: 'root'
+      SPRING_DATASOURCE_PASSWORD: 'root'
+      SPRING_JPA_HIBERNATE_DDL-AUTO: 'create-drop'
+      SPRING_JPA_DATABASE-PLATFORM: 'org.hibernate.dialect.MySQL5InnoDBDialect'
+      SERVER_SERVLET_CONTEXT-PATH: '/api'
+      CREATEDATABASEIFNOTEXISTS: 'true'
+      SERVER_PORT: 25020
+      SERVER_IP_ADDRESS: 'colleaguetracker.josian.nl'
+      TZ: "Europe/Amsterdam"
+    ports:
+      - '25020:25020'
+    restart: always
+
+    expose:
+      - '25020'
+    depends_on:
+      - io_ct_db_dev
+volumes:
+  io_ct_db_volume:

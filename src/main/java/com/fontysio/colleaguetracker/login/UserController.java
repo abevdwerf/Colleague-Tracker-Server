@@ -1,18 +1,14 @@
 package com.fontysio.colleaguetracker.login;
 
 import com.fontysio.colleaguetracker.StatusResponse;
-import com.fontysio.colleaguetracker.mail.EmailValidator;
+import com.fontysio.colleaguetracker.login.services.UserService;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Calendar;
 
 @RestController
 @CrossOrigin
@@ -40,4 +36,16 @@ public class UserController {
         }
         return new StatusResponse(HttpStatus.OK.value(), "User registered successfully");
     }
+
+    @GetMapping("/is-verified")
+    public StatusResponse isVerified (@RequestHeader String idToken) throws GoogleIDTokenInvalidException, UserNotRegisteredException {
+        User user = userService.getUser(userService.getExternalID(idToken));
+        if (userService.isVerified(user)){
+            return new StatusResponse(HttpStatus.OK.value(), "User is verified");
+        } else {
+            StatusResponse res = new StatusResponse(HttpStatus.UNAUTHORIZED.value(), "User is not verified");
+            return res;
+        }
+    }
+
 }
