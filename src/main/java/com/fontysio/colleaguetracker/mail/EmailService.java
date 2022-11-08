@@ -2,6 +2,7 @@ package com.fontysio.colleaguetracker.mail;
 
 import com.fontysio.colleaguetracker.login.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -15,6 +16,9 @@ public class EmailService {
     private final MessageSource messages;
     private final JavaMailSender mailSender;
     private final VerificationTokenRepository tokenRepository;
+
+    @Value("${SERVER_IP_ADDRESS}")
+    private String serverAddress;
 
     @Autowired
     public EmailService(MessageSource messages, JavaMailSender mailSender, VerificationTokenRepository verificationTokenRepository) {
@@ -33,6 +37,7 @@ public class EmailService {
     }
 
     public void sendConformationEmail(User user, Locale locale, String appUrl){
+
         String token = UUID.randomUUID().toString();
         createVerificationToken(user, token);
 
@@ -45,7 +50,8 @@ public class EmailService {
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);
         email.setSubject(subject);
-        email.setText(message + "\r\n" + "http://localhost:8080" + confirmationUrl);
+
+        email.setText(message + "\r\n" + serverAddress + confirmationUrl);
         mailSender.send(email);
     }
 

@@ -90,4 +90,12 @@ public class UserService implements IUserService_Email, IUserService_Status {
     public boolean emailExists(final String email) {
         return userRepository.findByEmail(email) != null;
     }
+
+    public User getUserByEmail (final String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public boolean isVerified(User user){
+        return user.isEnabled();
+    }
 }

@@ -36,4 +36,16 @@ public class UserController {
         }
         return new StatusResponse(HttpStatus.OK.value(), "User registered successfully");
     }
+
+    @GetMapping("/is-verified")
+    public StatusResponse isVerified (@RequestHeader String idToken) throws GoogleIDTokenInvalidException, UserNotRegisteredException {
+        User user = userService.getUser(userService.getExternalID(idToken));
+        if (userService.isVerified(user)){
+            return new StatusResponse(HttpStatus.OK.value(), "User is verified");
+        } else {
+            StatusResponse res = new StatusResponse(HttpStatus.UNAUTHORIZED.value(), "User is not verified");
+            return res;
+        }
+    }
+
 }

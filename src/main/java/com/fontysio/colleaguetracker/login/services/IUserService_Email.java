@@ -15,4 +15,6 @@ public interface IUserService_Email {
     void updateUser(User user);
 
     boolean emailExists(String emailAddress);
+    boolean isVerified(User user);
+    User getUserByEmail (final String email);
 }
