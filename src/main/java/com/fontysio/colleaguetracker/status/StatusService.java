@@ -7,9 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Optional;
-import java.util.TimeZone;
+import java.util.*;
 
 @Service
 public class StatusService {
@@ -69,5 +67,25 @@ public class StatusService {
         } else {
             throw new NoStatusFoundException();
         }
+    }
+
+    public List<Colleague> getAllColleagues(List<User> users, User currentUser){
+        List<Colleague> colleagueList = new ArrayList<>();
+        List<StatusObject> statusList = statusRepository.findAll();
+        for (User user:users) {
+            if (user.getId() != currentUser.getId() && user.isEnabled()) {
+                hasUserStatus(user, statusList, colleagueList);
+            }
+        }
+        return Collections.unmodifiableList(colleagueList);
+    }
+    private void hasUserStatus(User user, List<StatusObject> statusList , List<Colleague> colleagueList) {
+        for (StatusObject status:statusList) {
+            if (user.getId() == status.getUser().getId()) {
+                colleagueList.add(new Colleague(user.getFirstName(), user.getLastName(), status.getStatus()));
+                return;
+            }
+        }
+        colleagueList.add(new Colleague(user.getFirstName(), user.getLastName(), StatusObject.Status.Unknown));
     }
 }
