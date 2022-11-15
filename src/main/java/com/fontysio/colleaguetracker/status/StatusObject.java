@@ -12,6 +12,7 @@ public class StatusObject {
         Home,
         Office,
         Expired,
+        Unknown,
     }
 
     protected StatusObject() {}

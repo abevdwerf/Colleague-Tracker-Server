@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin
 @RequestMapping(path = "status")
@@ -37,6 +39,13 @@ public class StatusController {
     public StatusObject getStatus(@RequestHeader String idToken) throws GoogleIDTokenInvalidException, UserNotRegisteredException, NoStatusFoundException, StatusExpiredException {
         User user = userService.getUser(userService.getExternalID(idToken));
         return statusService.getStatus(user);
+    }
+
+    @GetMapping("/get-all-colleagues")
+    public List<Colleague> getAllColleagues(@RequestHeader String idToken) throws GoogleIDTokenInvalidException, UserNotRegisteredException {
+        User currentUser = userService.getUser(userService.getExternalID(idToken));
+        List<User> users = userService.getAllUsers();
+        return statusService.getAllColleagues(users, currentUser);
     }
 
 

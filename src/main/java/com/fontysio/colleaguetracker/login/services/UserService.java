@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.List;
 
 @Service
 public class UserService implements IUserService_Email, IUserService_Status {
@@ -89,6 +90,10 @@ public class UserService implements IUserService_Email, IUserService_Status {
 
     public boolean emailExists(final String email) {
         return userRepository.findByEmail(email) != null;
+    }
+
+    public List<User> getAllUsers(){
+        return Collections.unmodifiableList(userRepository.findAll());
     }
 
     public User getUserByEmail (final String email) {
