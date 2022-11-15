@@ -34,4 +34,8 @@ public class MACAddressController {
             return new StatusResponse(HttpStatus.BAD_REQUEST.value(), "Adding MACAddress to user failed");
         }
     }
+
+    //TODO deleteMACAddress(macAddressID)
+    //TODO changeMACAddress(macAddressID, newMacAddress)
+    //TODO getAllMACAddress()
 }
