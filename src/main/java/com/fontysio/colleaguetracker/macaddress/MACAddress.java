@@ -1,8 +1,11 @@
 package com.fontysio.colleaguetracker.macaddress;
 
+import lombok.AllArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity(name = "mac_address")
+@AllArgsConstructor
 public class MACAddress {
     @Id
     @GeneratedValue(strategy= GenerationType.SEQUENCE, generator="mac_address_id_gen")
