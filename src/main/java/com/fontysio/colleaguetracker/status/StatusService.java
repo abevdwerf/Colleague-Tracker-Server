@@ -82,10 +82,10 @@ public class StatusService {
     private void hasUserStatus(User user, List<StatusObject> statusList , List<Colleague> colleagueList) {
         for (StatusObject status:statusList) {
             if (user.getId() == status.getUser().getId()) {
-                colleagueList.add(new Colleague(user.getFirstName(), user.getLastName(), status.getStatus()));
+                colleagueList.add(new Colleague(user.getFirstName(), user.getLastName(), status.getStatus(), user.getId()));
                 return;
             }
         }
-        colleagueList.add(new Colleague(user.getFirstName(), user.getLastName(), StatusObject.Status.Unknown));
+        colleagueList.add(new Colleague(user.getFirstName(), user.getLastName(), StatusObject.Status.Unknown, user.getId()));
     }
 }
