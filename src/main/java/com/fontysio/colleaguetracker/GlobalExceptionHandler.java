@@ -2,6 +2,7 @@ package com.fontysio.colleaguetracker;
 
 import com.fontysio.colleaguetracker.login.GoogleIDTokenInvalidException;
 import com.fontysio.colleaguetracker.login.UserNotRegisteredException;
+import com.fontysio.colleaguetracker.macaddress.MACAddressAlreadyPresentWithUserException;
 import com.fontysio.colleaguetracker.status.NoStatusFoundException;
 import com.fontysio.colleaguetracker.status.StatusExpiredException;
 import org.springframework.http.HttpStatus;
@@ -34,5 +35,11 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public @ResponseBody StatusResponse handleStatusExpiredException() {
         return new StatusResponse(HttpStatus.BAD_REQUEST.value(), "The status has been expired");
+    }
+
+    @ExceptionHandler(value = MACAddressAlreadyPresentWithUserException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public @ResponseBody StatusResponse handleMACAddressAlreadyPresentWithUserException(){
+        return new StatusResponse(HttpStatus.BAD_REQUEST.value(), "MAC-Address already present with user");
     }
 }
