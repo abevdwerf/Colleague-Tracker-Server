@@ -23,7 +23,7 @@ public class UserService implements IUserService_Email, IUserService_Status {
 
     private final GooglePublicKeysManager publicKeysManager = new GooglePublicKeysManager(new NetHttpTransport(), new GsonFactory());
     private final GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(publicKeysManager)
-            .setAudience(Collections.singletonList("733509514183-sa302u6f1fhqc7a93j789daqmgr63ckv.apps.googleusercontent.com"))
+            .setAudience(Collections.singletonList("438901753170-4s3sdluu5ib01dovth3sva1572ecpvkr.apps.googleusercontent.com"))
             .build();
 
     @Autowired
