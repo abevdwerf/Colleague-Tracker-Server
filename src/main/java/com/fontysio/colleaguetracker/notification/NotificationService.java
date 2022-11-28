@@ -74,7 +74,6 @@ public class NotificationService {
 
                 if (response.getStatusCode() == HttpStatus.OK) {
 
-
                 } else if (response.getStatusCode() == HttpStatus.BAD_REQUEST || response.getStatusCode() == HttpStatus.NOT_FOUND) {
                     fcmTokenRepository.delete(token);
                 } else {

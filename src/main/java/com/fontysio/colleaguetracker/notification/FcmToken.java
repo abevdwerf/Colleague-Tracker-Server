@@ -21,6 +21,10 @@ public class FcmToken {
     @Column(name = "fcm_token", nullable = false)
     private String fcmToken;
 
+    protected FcmToken() {
+
+    }
+
 
     public Long getId() {
         return id;

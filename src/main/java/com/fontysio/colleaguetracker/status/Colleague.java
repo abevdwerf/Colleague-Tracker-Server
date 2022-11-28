@@ -1,7 +1,7 @@
 package com.fontysio.colleaguetracker.status;
 
 public class Colleague {
-    public Colleague(String firstName, String lastName, StatusObject.Status status, Long id) {
+    public Colleague(String firstName, String lastName, StatusObject.Status status, String id) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.status = status;
@@ -11,7 +11,7 @@ public class Colleague {
     private String firstName;
     private String lastName;
     private StatusObject.Status status;
-    private long id;
+    private String id;
 
     public String getFirstName() {
         return firstName;
@@ -25,7 +25,7 @@ public class Colleague {
         return status;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 }

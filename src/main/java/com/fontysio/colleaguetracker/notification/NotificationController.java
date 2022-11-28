@@ -37,10 +37,11 @@ public class NotificationController {
     }
 
     @PostMapping("/notify")
-    public StatusResponse NotifyUser(@RequestHeader String idToken, @RequestParam(value = "notifiedUserId")long notifiedUserId)
+    public StatusResponse NotifyUser(@RequestHeader String idToken, @RequestParam(value = "notifiedUserId")String notifiedUserId)
             throws GoogleIDTokenInvalidException, UserNotRegisteredException {
         User user = userService.getUser(userService.getExternalID(idToken));
-
-
+        User notifiedUser = userService.getUser(notifiedUserId);
+        notificationService.SendNotification(notifiedUser, new Notification(user.getFirstName() + " needs you for something and is looking for you!", "Someone is looking for you", Notification.Priority.high, "default"));
+        return new StatusResponse(HttpStatus.OK.value(), "Notification sent");
     }
 }
