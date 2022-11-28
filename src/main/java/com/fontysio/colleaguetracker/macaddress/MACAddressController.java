@@ -48,12 +48,12 @@ public class MACAddressController {
     @PutMapping("change-mac-address")
     public StatusResponse ChangeMACAddress(
             @RequestHeader String idToken,
-            @RequestParam(name = "oldMACAddress") String oldAddressValue,
+            @RequestParam(name = "oldMACAddress") Long macAddressID,
             @RequestParam(name = "newMACAddress") String newAddressValue
             ) throws GoogleIDTokenInvalidException, UserNotRegisteredException
     {
         User user = userService.getUser(userService.getExternalID(idToken));
-        if (macAddressService.updateMACAddress(oldAddressValue, newAddressValue, user.getId())) {
+        if (macAddressService.updateMACAddress(macAddressID, newAddressValue, user.getId())) {
             return new StatusResponse(HttpStatus.OK.value(), "Updated MACAddress successfully");
         } else {
             return new StatusResponse(HttpStatus.BAD_REQUEST.value(), "MACAddress with user ID not found");
@@ -65,6 +65,4 @@ public class MACAddressController {
         User user = userService.getUser(userService.getExternalID(idToken));
         return macAddressService.getAllMACAddresses(user.getId());
     }
-
-    //TODO changeMACAddress(macAddressID, newMacAddress)
 }

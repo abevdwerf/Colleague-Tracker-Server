@@ -2,11 +2,13 @@ package com.fontysio.colleaguetracker.macaddress;
 
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class MACAddressService {
+@Transactional
+public class  MACAddressService {
     private final MACAddressRepository macAddressRepository;
 
     public MACAddressService(MACAddressRepository macAddressRepository) {
@@ -32,8 +34,8 @@ public class MACAddressService {
         return macAddressRepository.deleteByIdAndUserID(macAddressID, userID) > 0;
     }
 
-    public boolean updateMACAddress(String oldAddressValue, String newAddressValue, Long userID) {
-        Optional<MACAddress> macAddressOptional = macAddressRepository.findByUserIDAndAddressValue(userID, oldAddressValue);
+    public boolean updateMACAddress(Long macAddressID, String newAddressValue, Long userID) {
+        Optional<MACAddress> macAddressOptional = macAddressRepository.findByUserIDAndId(userID, macAddressID);
         if (macAddressOptional.isEmpty()) {
             return false;
         }
