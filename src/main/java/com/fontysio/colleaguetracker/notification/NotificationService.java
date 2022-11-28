@@ -63,6 +63,7 @@ public class NotificationService {
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.APPLICATION_JSON);
                 headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+                headers.add("Authorization", "key=AAAAZjCVRVI:APA91bGXTkJtUhTI4bxyc_s0ugl83xms1hGhdmUj9Tw-1A8KqEjVP9VeWyk_GDohZ1hTtbhLRZnkZKfZrv5yY_zDI5VkmYdFfEFeX0-FEoCvZK6SbNvTDCnqzj_ceLQi5hjjZX3jvg1M");
                 HttpEntity request = new HttpEntity(jsonString, headers);
                 response = restTemplate.exchange(
                         url,
@@ -72,6 +73,7 @@ public class NotificationService {
                 );
 
                 if (response.getStatusCode() == HttpStatus.OK) {
+
 
                 } else if (response.getStatusCode() == HttpStatus.BAD_REQUEST || response.getStatusCode() == HttpStatus.NOT_FOUND) {
                     fcmTokenRepository.delete(token);
