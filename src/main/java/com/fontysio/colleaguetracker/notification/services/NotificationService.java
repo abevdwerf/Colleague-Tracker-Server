@@ -15,7 +15,8 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class NotificationService {
+public class NotificationService implements INotificationService_Status {
+
 
     private final FcmTokenRepository fcmTokenRepository;
 

@@ -16,17 +16,23 @@ public class StatusObject {
     }
 
     protected StatusObject() {}
-    public StatusObject(Status status, String expirationTime, User user) {
+
+    public StatusObject(Status status, String expirationTime, String beginTime, User user) {
         this.status = status;
         this.expirationTime = expirationTime;
+        this.beginTime = beginTime;
         this.user = user;
     }
+
     @Id
     private Long id;
     @Column(name = "status")
     private Status status;
     @Column(name = "expiration_time")
     private String expirationTime;
+
+    @Column(name = "begin_time")
+    private String beginTime;
     @OneToOne
     @MapsId
     @JoinColumn(name = "user_id")
@@ -54,5 +60,13 @@ public class StatusObject {
 
     public void setExpirationTime(String expirationTime) {
         this.expirationTime = expirationTime;
+    }
+
+    public String getBeginTime() {
+        return beginTime;
+    }
+
+    public void setBeginTime(String beginTime) {
+        this.beginTime = beginTime;
     }
 }

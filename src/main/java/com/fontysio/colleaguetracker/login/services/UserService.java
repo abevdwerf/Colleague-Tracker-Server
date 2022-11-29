@@ -67,6 +67,13 @@ public class UserService implements IUserService_Email, IUserService_Status {
             throw new RuntimeException(error);
         }
     }
+    public User getUserById (Long userId) throws UserNotRegisteredException {
+        User user = userRepository.findById(userId).get();
+        if (user != null) {
+            return user;
+        }
+        throw new UserNotRegisteredException();
+    }
 
     public Long getUserID(String externalID) throws UserNotRegisteredException {
         User user = userRepository.getUserByExternalID(externalID);

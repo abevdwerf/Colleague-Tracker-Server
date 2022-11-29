@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -18,11 +19,11 @@ public class StatusService {
         this.statusRepository = statusRepository;
     }
 
-    public boolean setStatus(StatusObject.Status status, String expirationTime, User user){
+    public boolean setStatus(StatusObject.Status status, String beginTime, String expirationTime, User user){
         Optional<StatusObject> test = statusRepository.findById(user.getId());
         StatusObject statusObject;
         if (test.isEmpty()){
-            statusObject = new StatusObject(status, expirationTime, user);
+            statusObject = new StatusObject(status, expirationTime, beginTime, user);
         } else {
             statusObject = statusRepository.getStatusObjectByUser(user);
             statusObject.setStatus(status);
@@ -47,21 +48,27 @@ public class StatusService {
     public boolean isStatusExpired(StatusObject statusObject){
         Long currentDate = System.currentTimeMillis();
         Long expirationDate = Long.parseLong(statusObject.getExpirationTime()) * 1000;
+        Long beginDate = Long.parseLong(statusObject.getBeginTime()) * 1000;
 
 //        SimpleDateFormat sdf;
 //        sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
 //        sdf.setTimeZone(TimeZone.getTimeZone("CEST"));
 //        String textNow = sdf.format(currentDate);
 //        String textExpiration = sdf.format(expirationDate);
-        return currentDate > expirationDate;
+
+        boolean isExpired = currentDate < beginDate || currentDate > expirationDate;
+        if (currentDate > expirationDate) {
+            statusObject.setBeginTime(null);
+            statusRepository.save(statusObject);
+        }
+        return isExpired;
     }
 
     public StatusObject getStatus(User user) throws NoStatusFoundException {
         StatusObject statusObject = statusRepository.getStatusObjectByUser(user);
         if (statusObject != null) {
             if (isStatusExpired(statusObject)) {
-                statusObject.setStatus(StatusObject.Status.Expired);
-                statusRepository.save(statusObject);
+                statusObject.setStatus(StatusObject.Status.Unknown);
             }
             return statusObject;
         } else {
@@ -81,11 +88,40 @@ public class StatusService {
     }
     private void hasUserStatus(User user, List<StatusObject> statusList , List<Colleague> colleagueList) {
         for (StatusObject status:statusList) {
-            if (user.getId() == status.getUser().getId()) {
+            if (user.getId() == status.getUser().getId() && !isStatusExpired(status)) {
                 colleagueList.add(new Colleague(user.getFirstName(), user.getLastName(), status.getStatus(), user.getExternalID()));
                 return;
             }
         }
         colleagueList.add(new Colleague(user.getFirstName(), user.getLastName(), StatusObject.Status.Unknown, user.getExternalID()));
+    }
+
+    public List<Long> needToSetStatus(List<User> users) {
+        List<Long> needToSetStatusList = new ArrayList<>();
+        for (User user:users) {
+            boolean userHasStatus = false;
+            if (user.isEnabled()) {
+                for (StatusObject status:statusRepository.findAll()) {
+                    if (user.getId() == status.getUser().getId()) {
+                        userHasStatus = true;
+                        if (status.getBeginTime() == null || status.getExpirationTime() == null) {
+                            needToSetStatusList.add(user.getId());
+                            break;
+                        } else {
+                            if (isStatusExpired(status)) {
+                                if (status.getBeginTime() == null) {
+                                    needToSetStatusList.add(user.getId());
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (!userHasStatus) {
+                    needToSetStatusList.add(user.getId());
+                }
+            }
+        }
+        return needToSetStatusList;
     }
 }

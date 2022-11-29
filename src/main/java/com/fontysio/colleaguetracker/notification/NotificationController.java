@@ -43,4 +43,6 @@ public class NotificationController {
         notificationService.SendNotification(notifiedUser, new Notification(user.getFirstName() + " needs you for something and is looking for you!", "Someone is looking for you", Notification.Priority.high, "default"));
         return new StatusResponse(HttpStatus.OK.value(), "Notification sent");
     }
+
+
 }
