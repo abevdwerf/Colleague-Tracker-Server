@@ -34,10 +34,14 @@ public class  MACAddressService {
         return macAddressRepository.deleteByIdAndUserID(macAddressID, userID) > 0;
     }
 
-    public boolean updateMACAddress(Long macAddressID, String newAddressValue, Long userID) {
+    public boolean updateMACAddress(Long macAddressID, String newAddressValue, Long userID) throws MACAddressAlreadyPresentWithUserException {
         Optional<MACAddress> macAddressOptional = macAddressRepository.findByUserIDAndId(userID, macAddressID);
         if (macAddressOptional.isEmpty()) {
             return false;
+        }
+        Optional<MACAddress> newMACAddressOptional = macAddressRepository.findByUserIDAndAddressValue(userID, newAddressValue);
+        if (newMACAddressOptional.isPresent()) {
+            throw new MACAddressAlreadyPresentWithUserException();
         }
         MACAddress newMACAddress = new MACAddress(macAddressOptional.get().getId(), newAddressValue, userID);
         macAddressRepository.save(newMACAddress);

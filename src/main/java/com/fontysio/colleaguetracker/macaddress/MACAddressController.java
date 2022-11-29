@@ -50,8 +50,7 @@ public class MACAddressController {
             @RequestHeader String idToken,
             @RequestParam(name = "oldMACAddressID") Long macAddressID,
             @RequestParam(name = "newMACAddress") String newAddressValue
-            ) throws GoogleIDTokenInvalidException, UserNotRegisteredException
-    {
+            ) throws GoogleIDTokenInvalidException, UserNotRegisteredException, MACAddressAlreadyPresentWithUserException {
         User user = userService.getUser(userService.getExternalID(idToken));
         if (macAddressService.updateMACAddress(macAddressID, newAddressValue, user.getId())) {
             return new StatusResponse(HttpStatus.OK.value(), "Updated MACAddress successfully");
