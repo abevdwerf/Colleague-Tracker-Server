@@ -1,6 +1,9 @@
-package com.fontysio.colleaguetracker.notification;
+package com.fontysio.colleaguetracker.notification.services;
 
 import com.fontysio.colleaguetracker.login.User;
+import com.fontysio.colleaguetracker.notification.FcmToken;
+import com.fontysio.colleaguetracker.notification.FcmTokenRepository;
+import com.fontysio.colleaguetracker.notification.Notification;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
