@@ -55,7 +55,13 @@ public class StatusService {
 //        sdf.setTimeZone(TimeZone.getTimeZone("CEST"));
 //        String textNow = sdf.format(currentDate);
 //        String textExpiration = sdf.format(expirationDate);
-        return currentDate < beginDate && currentDate > expirationDate;
+
+        boolean isExpired = currentDate < beginDate || currentDate > expirationDate;
+        if (currentDate > expirationDate) {
+            statusObject.setBeginTime(null);
+            statusRepository.save(statusObject);
+        }
+        return isExpired;
     }
 
     public StatusObject getStatus(User user) throws NoStatusFoundException {
@@ -103,7 +109,7 @@ public class StatusService {
                             break;
                         } else {
                             if (isStatusExpired(status)) {
-                                if (!new Date(Long.parseLong(status.getBeginTime()) * 1000).equals(new Date(System.currentTimeMillis()))) {
+                                if (status.getBeginTime() == null) {
                                     needToSetStatusList.add(user.getId());
                                     break;
                                 }

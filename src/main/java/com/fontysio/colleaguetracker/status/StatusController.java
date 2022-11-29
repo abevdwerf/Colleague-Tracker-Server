@@ -55,11 +55,12 @@ public class StatusController {
         return statusService.getAllColleagues(users, currentUser);
     }
 
-    @Scheduled(cron = "0 50 11 * * MON-FRI")
+    @Scheduled(cron = "0 30 9 * * MON-FRI")
     private void sendReminderMessages() throws UserNotRegisteredException {
-        for (Long userId:statusService.needToSetStatus(userService.getAllUsers())) {
+        List<Long> allNotifiedUsers = statusService.needToSetStatus(userService.getAllUsers());
+        for (Long userId:allNotifiedUsers) {
             User user = userService.getUserById(userId);
-            notificationService.SendNotification(user, new Notification("You haven't set your status for today yet, please do so that your colleagues know here you are", "Set status reminder", Notification.Priority.high, "default"));
+            notificationService.SendNotification(user, new Notification("You haven't set your status for today yet, please do so that your colleagues know where you are.", "Status reminder", Notification.Priority.high, "default"));
         }
     }
 
