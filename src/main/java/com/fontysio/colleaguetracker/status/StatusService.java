@@ -48,20 +48,18 @@ public class StatusService {
     public boolean isStatusExpired(StatusObject statusObject){
         Long currentDate = System.currentTimeMillis();
         Long expirationDate = Long.parseLong(statusObject.getExpirationTime()) * 1000;
-        Long beginDate = Long.parseLong(statusObject.getBeginTime()) * 1000;
+        if (statusObject.getBeginTime() == null || statusObject.getExpirationTime() == null) {
+            return true;
+        } else {
+            Long beginDate = Long.parseLong(statusObject.getBeginTime()) * 1000;
 
-//        SimpleDateFormat sdf;
-//        sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-//        sdf.setTimeZone(TimeZone.getTimeZone("CEST"));
-//        String textNow = sdf.format(currentDate);
-//        String textExpiration = sdf.format(expirationDate);
-
-        boolean isExpired = currentDate < beginDate || currentDate > expirationDate;
-        if (currentDate > expirationDate) {
-            statusObject.setBeginTime(null);
-            statusRepository.save(statusObject);
+            boolean isExpired = currentDate < beginDate || currentDate > expirationDate;
+            if (currentDate > expirationDate) {
+                statusObject.setBeginTime(null);
+                statusRepository.save(statusObject);
+            }
+            return isExpired;
         }
-        return isExpired;
     }
 
     public StatusObject getStatus(User user) throws NoStatusFoundException {
