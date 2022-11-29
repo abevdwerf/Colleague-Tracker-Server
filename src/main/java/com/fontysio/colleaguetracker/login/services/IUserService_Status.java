@@ -10,4 +10,5 @@ public interface IUserService_Status {
     String getExternalID(String idToken) throws GoogleIDTokenInvalidException;
     User getUser(String externalID) throws UserNotRegisteredException;
     List<User> getAllUsers();
+    User getUserById (Long userId) throws UserNotRegisteredException;
 }

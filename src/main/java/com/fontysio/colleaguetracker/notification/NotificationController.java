@@ -6,11 +6,10 @@ import com.fontysio.colleaguetracker.login.GoogleIDTokenInvalidException;
 import com.fontysio.colleaguetracker.login.User;
 import com.fontysio.colleaguetracker.login.UserNotRegisteredException;
 import com.fontysio.colleaguetracker.login.services.UserService;
+import com.fontysio.colleaguetracker.notification.services.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.http.HttpResponse;
 
 @RestController
 @CrossOrigin
@@ -44,4 +43,6 @@ public class NotificationController {
         notificationService.SendNotification(notifiedUser, new Notification(user.getFirstName() + " needs you for something and is looking for you!", "Someone is looking for you", Notification.Priority.high, "default"));
         return new StatusResponse(HttpStatus.OK.value(), "Notification sent");
     }
+
+
 }

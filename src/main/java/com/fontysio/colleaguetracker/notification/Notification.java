@@ -2,7 +2,7 @@ package com.fontysio.colleaguetracker.notification;
 
 public class Notification {
 
-    enum Priority {
+    public enum Priority {
         normal,
         high
     }
