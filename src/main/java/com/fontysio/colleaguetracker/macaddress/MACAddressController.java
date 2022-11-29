@@ -48,7 +48,7 @@ public class MACAddressController {
     @PutMapping("change-mac-address")
     public StatusResponse ChangeMACAddress(
             @RequestHeader String idToken,
-            @RequestParam(name = "oldMACAddress") Long macAddressID,
+            @RequestParam(name = "oldMACAddressID") Long macAddressID,
             @RequestParam(name = "newMACAddress") String newAddressValue
             ) throws GoogleIDTokenInvalidException, UserNotRegisteredException
     {
