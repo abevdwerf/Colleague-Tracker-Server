@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity(name = "status")
 public class StatusObject {
 
-    enum Status {
+    public enum Status {
         Home,
         Office,
         Expired,
@@ -22,6 +22,9 @@ public class StatusObject {
         this.expirationTime = expirationTime;
         this.beginTime = beginTime;
         this.user = user;
+
+        this.detectedAtOffice = false;
+        this.active = true;
     }
 
     @Id
@@ -37,6 +40,28 @@ public class StatusObject {
     @MapsId
     @JoinColumn(name = "user_id")
     private User user;
+
+    public boolean isDetectedAtOffice() {
+        return detectedAtOffice;
+    }
+
+    public void setDetectedAtOffice(boolean detectedAtOffice) {
+        this.detectedAtOffice = detectedAtOffice;
+    }
+
+    @Column(name = "detected_at_office")
+    private boolean detectedAtOffice;
+
+    @Column(name = "active", nullable = false)
+    private boolean active;
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
     public Status getStatus() {
         return status;

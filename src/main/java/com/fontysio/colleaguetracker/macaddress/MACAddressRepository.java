@@ -12,4 +12,5 @@ public interface MACAddressRepository extends JpaRepository<MACAddress, Long> {
     Optional<MACAddress> findByUserIDAndId(Long userID, Long macAddressID);
     Long deleteByIdAndUserID(Long id, Long userID);
     List<MACAddress> findByUserID(Long userID);
+    MACAddress findByAddressValue(String addressValue);
 }

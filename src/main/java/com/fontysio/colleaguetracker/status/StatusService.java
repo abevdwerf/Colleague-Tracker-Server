@@ -1,13 +1,9 @@
 package com.fontysio.colleaguetracker.status;
 
 import com.fontysio.colleaguetracker.login.User;
-import com.google.api.client.util.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -30,6 +26,7 @@ public class StatusService {
             statusObject.setExpirationTime(expirationTime);
             statusObject.setBeginTime(beginTime);
         }
+        isStatusNotActive(statusObject);
         statusRepository.save(statusObject);
 
 
@@ -45,30 +42,51 @@ public class StatusService {
         }*/
 
     }
+    public void resetAllStatusToNotDetected() {
+        for (StatusObject status: statusRepository.findAll()) {
+            status.setDetectedAtOffice(false);
+            statusRepository.save(status);
+        }
+    }
 
-    public boolean isStatusExpired(StatusObject statusObject){
+    public void changeIsDetectedAtOffice(User user, Boolean isDetected) {
+        Optional<StatusObject> test = statusRepository.findById(user.getId());
+        StatusObject statusObject;
+        if (test.isEmpty()){
+            return;
+        } else {
+            statusObject = statusRepository.getStatusObjectByUser(user);
+            statusObject.setDetectedAtOffice(isDetected);
+        }
+        statusRepository.save(statusObject);
+    }
+
+    public boolean isStatusNotActive(StatusObject statusObject){
         Long currentDate = System.currentTimeMillis();
 
         if (statusObject.getBeginTime() == null || statusObject.getExpirationTime() == null) {
+
             return true;
         } else {
             Long beginDate = Long.parseLong(statusObject.getBeginTime()) * 1000;
             Long expirationDate = Long.parseLong(statusObject.getExpirationTime()) * 1000;
 
-            boolean isExpired = currentDate < beginDate || currentDate > expirationDate;
+            boolean isNotActive = currentDate < beginDate || currentDate > expirationDate;
             if (currentDate > expirationDate) {
                 statusObject.setBeginTime(null);
                 statusObject.setExpirationTime(null);
-                statusRepository.save(statusObject);
             }
-            return isExpired;
+            statusObject.setActive(!isNotActive);
+            statusRepository.save(statusObject);
+            return isNotActive;
         }
+
     }
 
     public StatusObject getStatus(User user) throws NoStatusFoundException {
         StatusObject statusObject = statusRepository.getStatusObjectByUser(user);
         if (statusObject != null) {
-            if (isStatusExpired(statusObject)) {
+            if (isStatusNotActive(statusObject)) {
                 statusObject.setStatus(StatusObject.Status.Unknown);
             }
             return statusObject;
@@ -81,7 +99,7 @@ public class StatusService {
         List<Colleague> colleagueList = new ArrayList<>();
         List<StatusObject> statusList = statusRepository.findAll();
         for (User user:users) {
-            if (user.getId() != currentUser.getId() && user.isEnabled()) {
+            if (!Objects.equals(user.getId(), currentUser.getId()) && user.isEnabled()) {
                 hasUserStatus(user, statusList, colleagueList);
             }
         }
@@ -89,13 +107,14 @@ public class StatusService {
     }
     private void hasUserStatus(User user, List<StatusObject> statusList , List<Colleague> colleagueList) {
         for (StatusObject status:statusList) {
-            if (user.getId() == status.getUser().getId() && !isStatusExpired(status)) {
+            if (user.getId() == status.getUser().getId()) {
                 colleagueList.add(new Colleague(user.getFirstName(), user.getLastName(), status.getStatus(), user.getExternalID()));
                 return;
             }
         }
         colleagueList.add(new Colleague(user.getFirstName(), user.getLastName(), StatusObject.Status.Unknown, user.getExternalID()));
     }
+
 
     public List<Long> needToSetStatus(List<User> users) {
         List<Long> needToSetStatusList = new ArrayList<>();
@@ -109,7 +128,7 @@ public class StatusService {
                             needToSetStatusList.add(user.getId());
                             break;
                         } else {
-                            if (isStatusExpired(status)) {
+                            if (isStatusNotActive(status)) {
                                 if (status.getBeginTime() == null) {
                                     needToSetStatusList.add(user.getId());
                                     break;
