@@ -28,6 +28,7 @@ public class StatusService {
             statusObject = statusRepository.getStatusObjectByUser(user);
             statusObject.setStatus(status);
             statusObject.setExpirationTime(expirationTime);
+            statusObject.setBeginTime(beginTime);
         }
         statusRepository.save(statusObject);
 
@@ -47,15 +48,17 @@ public class StatusService {
 
     public boolean isStatusExpired(StatusObject statusObject){
         Long currentDate = System.currentTimeMillis();
-        Long expirationDate = Long.parseLong(statusObject.getExpirationTime()) * 1000;
+
         if (statusObject.getBeginTime() == null || statusObject.getExpirationTime() == null) {
             return true;
         } else {
             Long beginDate = Long.parseLong(statusObject.getBeginTime()) * 1000;
+            Long expirationDate = Long.parseLong(statusObject.getExpirationTime()) * 1000;
 
             boolean isExpired = currentDate < beginDate || currentDate > expirationDate;
             if (currentDate > expirationDate) {
                 statusObject.setBeginTime(null);
+                statusObject.setExpirationTime(null);
                 statusRepository.save(statusObject);
             }
             return isExpired;
