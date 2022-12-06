@@ -3,6 +3,7 @@ package com.fontysio.colleaguetracker.macaddress;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,6 +47,18 @@ public class  MACAddressService {
         MACAddress newMACAddress = new MACAddress(macAddressOptional.get().getId(), newAddressValue, userID);
         macAddressRepository.save(newMACAddress);
         return true;
+    }
+
+    public List<Long> getUserIdsByMacAddresses(List<String> macAddresses) {
+        List<Long> userIds = new ArrayList<>();
+        for (String macAddress:macAddresses) {
+            MACAddress foundMacAddress = macAddressRepository.findByAddressValue(macAddress);
+            if (foundMacAddress != null) {
+                userIds.add(foundMacAddress.getUserID());
+            }
+        }
+        return userIds;
+
     }
 
     public List<MACAddress> getAllMACAddresses(Long userID) {
