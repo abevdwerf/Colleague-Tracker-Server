@@ -4,7 +4,6 @@ import com.fontysio.colleaguetracker.StatusResponse;
 import com.fontysio.colleaguetracker.login.User;
 import com.fontysio.colleaguetracker.login.services.UserService;
 import com.fontysio.colleaguetracker.macaddress.MACAddressService;
-import com.fontysio.colleaguetracker.status.StatusObject;
 import com.fontysio.colleaguetracker.status.StatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
