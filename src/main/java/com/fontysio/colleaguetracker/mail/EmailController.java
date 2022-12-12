@@ -62,22 +62,5 @@ public class EmailController {
         return new StatusResponse(HttpStatus.OK.value(), "mail sent succesfully") ;
     }
 
-    @GetMapping("/confirm")
-    public String confirmVerification(@RequestParam("token") final String token) {
 
-        final VerificationToken verificationToken = emailService.getVerificationToken(token);
-        if (verificationToken == null) {
-            return "Verification token invalid";
-        }
-
-        final User user = verificationToken.getUser();
-        final Calendar cal = Calendar.getInstance();
-        if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
-            return "Expired token";
-        }
-
-        user.setEnabled(true);
-        userService.updateUser(user);
-        return "verified";
-    }
 }
