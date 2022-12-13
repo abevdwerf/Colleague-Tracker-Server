@@ -32,9 +32,16 @@ public class MACAddress {
     )
     private Long userID;
 
-    public MACAddress(String addressValue, Long userID) {
+    @Column(
+            name = "label",
+            nullable = true
+    )
+    private String label;
+
+    public MACAddress(String addressValue, Long userID, String label) {
         this.addressValue = addressValue;
         this.userID = userID;
+        this.label = label;
     }
 
     protected MACAddress() {

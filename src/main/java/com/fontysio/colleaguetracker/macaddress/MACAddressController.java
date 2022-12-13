@@ -24,11 +24,11 @@ public class MACAddressController {
     }
 
     @PostMapping("/add-mac-address")
-    public StatusResponse AddMACAddress(@RequestHeader String idToken, @RequestParam(name = "macAddress") String addressValue)
+    public StatusResponse AddMACAddress(@RequestHeader String idToken, @RequestParam(name = "macAddress") String addressValue, @RequestParam(name = "label") String label)
             throws GoogleIDTokenInvalidException, UserNotRegisteredException, MACAddressAlreadyPresentWithUserException
     {
         User user = userService.getUser(userService.getExternalID(idToken));
-        if (macAddressService.addMACAddressToUser(new MACAddress(addressValue, user.getId()))){
+        if (macAddressService.addMACAddressToUser(new MACAddress(addressValue, user.getId(), label))){
             return new StatusResponse(HttpStatus.OK.value(), "Added MACAddress to user successfully");
         } else {
             return new StatusResponse(HttpStatus.BAD_REQUEST.value(), "Adding MACAddress to user failed");
@@ -49,10 +49,11 @@ public class MACAddressController {
     public StatusResponse ChangeMACAddress(
             @RequestHeader String idToken,
             @RequestParam(name = "oldMACAddressID") Long macAddressID,
-            @RequestParam(name = "newMACAddress") String newAddressValue
+            @RequestParam(name = "newMACAddress") String newAddressValue,
+            @RequestParam(name = "newLabel") String newLabel
             ) throws GoogleIDTokenInvalidException, UserNotRegisteredException, MACAddressAlreadyPresentWithUserException {
         User user = userService.getUser(userService.getExternalID(idToken));
-        if (macAddressService.updateMACAddress(macAddressID, newAddressValue, user.getId())) {
+        if (macAddressService.updateMACAddress(macAddressID, newAddressValue, user.getId(), newLabel)) {
             return new StatusResponse(HttpStatus.OK.value(), "Updated MACAddress successfully");
         } else {
             return new StatusResponse(HttpStatus.BAD_REQUEST.value(), "MACAddress with user ID not found");
