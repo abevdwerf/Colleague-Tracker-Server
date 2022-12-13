@@ -58,7 +58,7 @@ public class EmailController {
         } catch (RuntimeException ex) {
             return new StatusResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.toString()) ;
         }
-        return new StatusResponse(HttpStatus.OK.value(), "mail sent succesfully") ;
+        return new StatusResponse(HttpStatus.OK.value(), "mail sent successfully") ;
     }
 
 
