@@ -59,4 +59,8 @@ public class MACAddress {
     public Long getUserID() {
         return userID;
     }
+
+    public String getLabel() {
+        return label;
+    }
 }
