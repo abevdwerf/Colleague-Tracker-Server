@@ -32,10 +32,9 @@ public class EmailController {
         String externalID = userService.getExternalID(IdToken);
         User user = userService.getUser(externalID);
 
-//        EmailValidator validator = new EmailValidator();
-//        if (!validator.isValid(emailAddress)) {
-//            return new StatusResponse(HttpStatus.UNAUTHORIZED.value(), "invalid email-address") ;
-//        }
+        if (!EmailValidator.isValid(emailAddress)) {
+            return new StatusResponse(HttpStatus.UNAUTHORIZED.value(), "invalid email-address") ;
+        }
 
         if (userService.isVerified(user)) {
             return new StatusResponse(HttpStatus.BAD_REQUEST.value(), "This account is already verified");
@@ -59,25 +58,8 @@ public class EmailController {
         } catch (RuntimeException ex) {
             return new StatusResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.toString()) ;
         }
-        return new StatusResponse(HttpStatus.OK.value(), "mail sent succesfully") ;
+        return new StatusResponse(HttpStatus.OK.value(), "mail sent successfully") ;
     }
 
-    @GetMapping("/confirm")
-    public String confirmVerification(@RequestParam("token") final String token) {
 
-        final VerificationToken verificationToken = emailService.getVerificationToken(token);
-        if (verificationToken == null) {
-            return "Verification token invalid";
-        }
-
-        final User user = verificationToken.getUser();
-        final Calendar cal = Calendar.getInstance();
-        if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
-            return "Expired token";
-        }
-
-        user.setEnabled(true);
-        userService.updateUser(user);
-        return "verified";
-    }
 }

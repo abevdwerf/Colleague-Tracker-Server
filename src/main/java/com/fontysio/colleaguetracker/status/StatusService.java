@@ -75,6 +75,7 @@ public class StatusService {
             if (currentDate > expirationDate) {
                 statusObject.setBeginTime(null);
                 statusObject.setExpirationTime(null);
+                statusObject.setStatus(StatusObject.Status.Unknown);
             }
             statusObject.setActive(!isNotActive);
             statusRepository.save(statusObject);
@@ -86,9 +87,7 @@ public class StatusService {
     public StatusObject getStatus(User user) throws NoStatusFoundException {
         StatusObject statusObject = statusRepository.getStatusObjectByUser(user);
         if (statusObject != null) {
-            if (isStatusNotActive(statusObject)) {
-                statusObject.setStatus(StatusObject.Status.Unknown);
-            }
+            isStatusNotActive(statusObject);
             return statusObject;
         } else {
             throw new NoStatusFoundException();
@@ -108,11 +107,11 @@ public class StatusService {
     private void hasUserStatus(User user, List<StatusObject> statusList , List<Colleague> colleagueList) {
         for (StatusObject status:statusList) {
             if (user.getId() == status.getUser().getId()) {
-                colleagueList.add(new Colleague(user.getFirstName(), user.getLastName(), status.getStatus(), user.getExternalID()));
+                colleagueList.add(new Colleague(user.getFirstName(), user.getLastName(), status, user.getExternalID()));
                 return;
             }
         }
-        colleagueList.add(new Colleague(user.getFirstName(), user.getLastName(), StatusObject.Status.Unknown, user.getExternalID()));
+        colleagueList.add(new Colleague(user.getFirstName(), user.getLastName(), new StatusObject(StatusObject.Status.Unknown, null, null, user), user.getExternalID()));
     }
 
 
