@@ -50,6 +50,7 @@ public class EmailService {
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);
         email.setSubject(subject);
+        email.setFrom(env.getProperty("spring.mail.username"));
 
         email.setText(message + "\r\n" + serverAddress + confirmationUrl);
         mailSender.send(email);
