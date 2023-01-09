@@ -21,6 +21,9 @@ public class EmailService {
     @Value("${SERVER_IP_ADDRESS}")
     private String serverAddress;
 
+    @Value("${from.email.address}")
+    private String fromEmailAddress;
+
     @Autowired
     private Environment environment;
 
@@ -56,7 +59,7 @@ public class EmailService {
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);
         email.setSubject(subject);
-        email.setFrom(environment.getProperty("spring.mail.username"));
+        email.setFrom(fromEmailAddress);
 
         email.setText(message + "\r\n" + serverAddress + serverPort + confirmationUrl);
         mailSender.send(email);
