@@ -65,7 +65,9 @@ public class StatusService {
         Long currentDate = System.currentTimeMillis();
 
         if (statusObject.getBeginTime() == null || statusObject.getExpirationTime() == null) {
-
+            statusObject.setBeginTime(null);
+            statusObject.setExpirationTime(null);
+            statusObject.setStatus(StatusObject.Status.Unknown);
             return true;
         } else {
             Long beginDate = Long.parseLong(statusObject.getBeginTime()) * 1000;
@@ -94,7 +96,7 @@ public class StatusService {
         }
     }
 
-    public List<Colleague> getAllColleagues(List<User> users, User currentUser){
+    public List<Colleague> getAllColleagues(List<User> users, User currentUser) {
         List<Colleague> colleagueList = new ArrayList<>();
         List<StatusObject> statusList = statusRepository.findAll();
         for (User user:users) {
@@ -106,6 +108,7 @@ public class StatusService {
     }
     private void hasUserStatus(User user, List<StatusObject> statusList , List<Colleague> colleagueList) {
         for (StatusObject status:statusList) {
+            isStatusNotActive(status);
             if (user.getId() == status.getUser().getId()) {
                 colleagueList.add(new Colleague(user.getFirstName(), user.getLastName(), status, user.getExternalID()));
                 return;
