@@ -14,11 +14,17 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @RequestMapping(path = "user")
 public class UserController {
+    // user service
     private final UserService userService;
 
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
+    }
+
+    @GetMapping("/ping")
+    public String healthCheck() {
+        return "Pong";
     }
 
     @GetMapping( "/get-full-name")

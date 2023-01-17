@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -41,7 +42,7 @@ public class  MACAddressService {
             return false;
         }
         Optional<MACAddress> newMACAddressOptional = macAddressRepository.findByUserIDAndAddressValue(userID, newAddressValue);
-        if (newMACAddressOptional.isPresent()) {
+        if (newMACAddressOptional.isPresent() && Objects.equals(newMACAddressOptional.get().getLabel(), newLabel)) {
             throw new MACAddressAlreadyPresentWithUserException();
         }
         MACAddress newMACAddress = new MACAddress(macAddressOptional.get().getId(), newAddressValue, userID, newLabel);
