@@ -43,7 +43,7 @@ public class StatusController {
     }
 
     @GetMapping("/get")
-    public StatusObject getStatus(@RequestHeader String idToken) throws GoogleIDTokenInvalidException, UserNotRegisteredException, NoStatusFoundException, StatusExpiredException {
+    public StatusObject getStatus(@RequestHeader String idToken) throws GoogleIDTokenInvalidException, UserNotRegisteredException, NoStatusFoundException {
         User user = userService.getUser(userService.getExternalID(idToken));
         return statusService.getStatus(user);
     }
