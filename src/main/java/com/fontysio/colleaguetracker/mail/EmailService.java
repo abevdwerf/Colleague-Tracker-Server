@@ -4,7 +4,6 @@ import com.fontysio.colleaguetracker.login.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
-import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
@@ -24,10 +23,8 @@ public class EmailService {
     @Value("${from.email.address}")
     private String fromEmailAddress;
 
-    @Autowired
-    private Environment environment;
-
-    private final String serverPort = environment.getProperty("server.port");
+    @Value("${server.port}")
+    private Integer serverPort;
 
     @Autowired
     public EmailService(MessageSource messages, JavaMailSender mailSender, VerificationTokenRepository verificationTokenRepository) {
@@ -61,7 +58,7 @@ public class EmailService {
         email.setSubject(subject);
         email.setFrom(fromEmailAddress);
 
-        email.setText(message + "\r\n" + serverAddress + serverPort + confirmationUrl);
+        email.setText(message + "\r\n" + serverAddress + serverPort.toString() + confirmationUrl);
         mailSender.send(email);
     }
 
