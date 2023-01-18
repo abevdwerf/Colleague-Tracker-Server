@@ -58,7 +58,7 @@ public class EmailService {
         email.setSubject(subject);
         email.setFrom(fromEmailAddress);
 
-        email.setText(message + "\r\n" + serverAddress + serverPort.toString() + confirmationUrl);
+        email.setText(message + "\r\n" + "https://" + serverAddress + confirmationUrl);
         mailSender.send(email);
     }
 
